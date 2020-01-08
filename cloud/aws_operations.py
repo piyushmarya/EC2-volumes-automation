@@ -113,7 +113,6 @@ class AwsOperations:
                 VolumeId=vol_id
             )
             print("\nDetaching...")
-            print("Detached\n")
             waiter = self.client_obj.get_waiter('volume_available')
             waiter.wait(VolumeIds=[vol_id])
 
@@ -122,6 +121,7 @@ class AwsOperations:
             if "root volume" in str(e):
                 print("Turn off instance")
                 return 0
+        print("Detached\n")
         return 1
 
     def create_volume(self):
