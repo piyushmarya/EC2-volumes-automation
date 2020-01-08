@@ -71,7 +71,7 @@ class AwsOperations:
                 )
             print("\nAttaching...\n")
             waiter = self.client_obj.get_waiter('volume_in_use')
-            waiter.wait(VolumeId=vol_id)
+            waiter.wait(VolumeIds=[vol_id, ])
 
         except botocore.exceptions.ClientError as e:
             print(e)
