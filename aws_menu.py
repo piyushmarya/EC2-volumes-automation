@@ -30,5 +30,6 @@ def menu():
         else:
             print('Please choose a valid command.')
         user_input = input(USER_CHOICE)
-
-menu()
+        
+if __name__ == "__main__":
+    menu()
