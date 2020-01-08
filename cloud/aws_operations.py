@@ -1,9 +1,11 @@
-from cloud.aws_connector import AwsConnector
 import botocore
+from cloud.aws_connector import AwsConnector
 
 
 class AwsOperations:
     def __init__(self):
+        """
+        """
         obj = AwsConnector()
         self.client_obj = obj.client_obj()
         self.created_volumes = []
@@ -15,6 +17,8 @@ class AwsOperations:
         return inp
 
     def describe_volume(self, vol_id):
+        """
+        """
         try:
             response = self.client_obj.describe_volumes(
                  VolumeIds=[vol_id, ]
@@ -25,6 +29,8 @@ class AwsOperations:
             print(e)
 
     def list_all_volumes(self):
+        """
+        """
         region = self.take_input("Enter region from which you want to list volumes: ")
         try:
             response = self.client_obj.describe_volumes(
@@ -51,6 +57,8 @@ class AwsOperations:
             print(e)
 
     def attach_volume(self):
+        """
+        """
         vol_id = self.take_input("Enter id of the volume: ")
         inst_id = self.take_input("Enter id of instance to which the volume is to be attached: ")
         dev_name = self.take_input("Enter the device name as which u eant to attach volume: ")
@@ -69,6 +77,8 @@ class AwsOperations:
             print(e)
 
     def delete_volume(self, vol_id=None):
+        """
+        """
         condition = "N"
         if vol_id is None:
             vol_id = self.take_input("Enter the id of the volume to be deleted: ")
@@ -90,6 +100,8 @@ class AwsOperations:
             self.created_volumes.remove(vol_id)
 
     def detach_volume(self, vol_id=None):
+        """
+        """
         if vol_id is None:
             vol_id = self.take_input("Enter the id of the volume to be detached: ")
 
@@ -108,6 +120,8 @@ class AwsOperations:
                 return 0
 
     def create_volume(self):
+        """
+        """
         size = int(self.take_input("Enter size(gb) of the volume to be created: "))
         type_vol = self.take_input("Enter type of the volume(gp2,iop,standard,etc)")
         region = self.take_input("Enter the region in which u want to create volume: ")
@@ -129,6 +143,8 @@ class AwsOperations:
             self.created_volumes.append(response['VolumeId'])
 
     def print_new_volumes(self):
+        """
+        """
         if not len(self.created_volumes):
             print("No new volumes")
         for i in self.created_volumes:
