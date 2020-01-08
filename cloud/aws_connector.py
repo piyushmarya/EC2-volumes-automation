@@ -1,13 +1,18 @@
+#This file reads the credentials and return a ec2 client object
 import boto3
 import botocore
 from credential.credential_handler import CredentialHandler
 
 
 class AwsConnector:
+    
     def __init__(self):
+        """
+        storing credetnials in a instance variable
+        """
         obj = CredentialHandler()
         self.credentials = obj.return_json()
-        print(self.credentials)
+        # print(self.credentials)
 
     def client_obj(self):
         try:
@@ -22,7 +27,3 @@ class AwsConnector:
             print(e)
 
         return client
-
-
-a = AwsConnector()
-a.client_obj()
