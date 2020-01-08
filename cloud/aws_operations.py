@@ -61,7 +61,7 @@ class AwsOperations:
         """
         vol_id = self.take_input("Enter id of the volume: ")
         inst_id = self.take_input("Enter id of instance to which the volume is to be attached: ")
-        dev_name = self.take_input("Enter the device name as which u eant to attach volume: ")
+        dev_name = self.take_input("Enter the device name as which you want to attach the volume: ")
 
         try:
             response = self.client_obj.attach_volume(
@@ -69,12 +69,13 @@ class AwsOperations:
                 InstanceId=inst_id,
                 Device=dev_name
                 )
-            print("\nAttaching...\n")
+            print("\nAttaching...")
             waiter = self.client_obj.get_waiter('volume_in_use')
             waiter.wait(VolumeIds=[vol_id, ])
 
         except botocore.exceptions.ClientError as e:
             print(e)
+        print("Attached\n")
 
     def delete_volume(self, vol_id=None):
         """
@@ -85,7 +86,7 @@ class AwsOperations:
 
         try:
             response = self.client_obj.delete_volume(VolumeId=vol_id)
-            print("\nDELETING...\n")
+            print("\nDeleting...")
             waiter = self.client_obj.get_waiter('volume_deleted')
             waiter.wait(VolumeIds=[vol_id])
 
@@ -93,10 +94,12 @@ class AwsOperations:
             print(e)
             if "VolumeInUse" in str(e):
                 condition = input("Continue Anyway (Y/N)")
-            if condition is "Y":
-                self.detach_volume(vol_id)
+                if condition is "Y":
+                    if self.detach_volume(vol_id):
+                        self.delete_volume(vol_id)
 
         if vol_id in self.created_volumes:
+            print("Deleted\n")
             self.created_volumes.remove(vol_id)
 
     def detach_volume(self, vol_id=None):
@@ -109,7 +112,8 @@ class AwsOperations:
             response = self.client_obj.detach_volume(
                 VolumeId=vol_id
             )
-            print("\nDetaching...\n")
+            print("\nDetaching...")
+            print("Detached\n")
             waiter = self.client_obj.get_waiter('volume_available')
             waiter.wait(VolumeIds=[vol_id])
 
@@ -118,13 +122,14 @@ class AwsOperations:
             if "root volume" in str(e):
                 print("Turn off instance")
                 return 0
+        return 1
 
     def create_volume(self):
         """
         """
         size = int(self.take_input("Enter size(gb) of the volume to be created: "))
         type_vol = self.take_input("Enter type of the volume(gp2,iop,standard,etc)")
-        region = self.take_input("Enter the region in which u want to create volume: ")
+        region = self.take_input("Enter the region in which u want to create volume(example:us-east-2c): ")
 
         try:
             response = self.client_obj.create_volume(
@@ -132,7 +137,7 @@ class AwsOperations:
                 Size=size,
                 VolumeType=type_vol,
             )
-            print("\nCreating...\n")
+            print("\nCreating...")
             waiter = self.client_obj.get_waiter('volume_available')
             waiter.wait(VolumeIds=[response['VolumeId'], ])
 
@@ -141,7 +146,7 @@ class AwsOperations:
 
         else:
             self.created_volumes.append(response['VolumeId'])
-
+            print("Created/n")
     def print_new_volumes(self):
         """
         """
@@ -150,6 +155,3 @@ class AwsOperations:
         for i in self.created_volumes:
             vol_info = self.describe_volume(i)
             print(i + " created on "+str(vol_info["Volumes"][0]['CreateTime']))
-
-
-
