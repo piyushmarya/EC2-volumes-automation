@@ -3,13 +3,13 @@ from cloud.aws_operations import AwsOperations
 cloud_obj = AwsOperations()
 
 USER_CHOICE = '''\nEnter one of the following
-- 'create' to create a new volume
-- 'delete' to delete
-- 'describe all' to display data all volumes in the specified region
-- 'attach' to attach a volume to a instance
-- 'detach' to detach a volume from a instance
-- list new' to print newly created volumes
-- 'q' to exit
+- 'create' to create a new volume.
+- 'delete' to delete.
+- 'describe all' to describe all volumes in the specified region.
+- 'attach' to attach a volume to a instance.
+- 'detach' to detach a volume from a instance.
+- list new' to print newly created volumes.
+- 'q' to exit.
 Enter your choice: '''
 
 user_choices = {
