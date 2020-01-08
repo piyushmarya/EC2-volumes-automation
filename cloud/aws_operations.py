@@ -146,7 +146,7 @@ class AwsOperations:
 
         else:
             self.created_volumes.append(response['VolumeId'])
-            print("Created/n")
+            print("Created\n")
     def print_new_volumes(self):
         """
         """
